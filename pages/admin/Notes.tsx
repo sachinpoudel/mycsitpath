@@ -67,27 +67,7 @@ export const AdminNotes: React.FC = () => {
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!noteContent || !selectedChapId) return;
-
-    const newNoteData: any = {
-        chapterId: selectedChapId,
-        type: noteType,
-    };
-
-    if (noteType === NoteType.TEXT) {
-        newNoteData.text = noteContent;
-    } else if (noteType === NoteType.IMAGE) {
-        // Simulation: In real app, this would be an array of uploaded URLs
-        newNoteData.imageUrls = [noteContent]; 
-    } else if (noteType === NoteType.VIDEO) {
-        newNoteData.videoUrls = [noteContent];
-    } else if (noteType === NoteType.PDF) {
-        newNoteData.pdfUrl = noteContent;
-    }
-
-    await db.notes.create(newNoteData);
-    setNoteContent('');
-    fetchNotes();
+    
   };
 
   const handleDelete = async (id: string) => {

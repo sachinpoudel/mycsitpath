@@ -38,7 +38,7 @@ export const AdminSubjects: React.FC = () => {
     e.preventDefault();
     if (!newSubjectName || !selectedSemId) return;
    
-    const res =await createSubjectApi({ name: newSubjectName, semester_id: selectedSemId });
+    const res =await createSubjectApi(newSubjectName, selectedSemId);
     if(res.error){
       console.log(res.error);
     }

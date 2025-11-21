@@ -46,14 +46,14 @@ export const adminLoginApi = async (username: string, password: string) => {
 
 // Semesters
 export const getSemestersApi = async () => (await apiClient.get(`${baseUrl}/api/auth/semesters`)).data.data;
-export const createSemesterApi = async (data: any) => (await apiClient.post('/api/semesters', data)).data;
+export const createSemesterApi = async ({name:string, number:number}) => (await apiClient.post('/api/semesters', { name, number })).data;
 export const deleteSemesterApi = async (id: string) => (await apiClient.delete(`/api/semesters/${id}`)).data;
 
 
 //subjects
  
 export const getAllSubjectsApi = async () => (await apiClient.get(`${baseUrl}/api/auth/subjects`)).data.data;
-export const createSubjectApi = async (data: { name: string;  semester_id: string }) => {
-    const res = await apiClient.post(`${baseUrl}/api/auth/subjects`, data);
+export const createSubjectApi = async (name:string, semester_id:string)  => {
+    const res = await apiClient.post(`${baseUrl}/api/auth/subjects`, { name, semester_id });
     return res.data;
 };
