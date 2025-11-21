@@ -3,6 +3,9 @@ import { db } from '../../lib/db';
 import { Semester, Subject, Chapter, Note, NoteType } from '../../types';
 import { Button, Input, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Card, CardHeader, CardTitle, CardContent, Label } from '../../components/ui/shadcn';
 import { Trash2, Plus, FileType, Image, Video, Link, FileText } from 'lucide-react';
+import { createNoteApi, getAllSubjectsApi, getChaptersApi, getNotesApi, getSemestersApi } from '@/api/api';
+
+
 
 export const AdminNotes: React.FC = () => {
   const [semesters, setSemesters] = useState<Semester[]>([]);
@@ -21,8 +24,8 @@ export const AdminNotes: React.FC = () => {
   // Fetch Semesters
   useEffect(() => {
     const loadSemesters = async () => {
-        const sems = await db.semesters.getAll();
-        setSemesters(sems);
+        const sems = await getSemestersApi();
+        setSemesters(sems || []);
         if (sems.length > 0) setSelectedSemId(sems[0].id);
     };
     loadSemesters();
@@ -32,7 +35,7 @@ export const AdminNotes: React.FC = () => {
   useEffect(() => {
     if (!selectedSemId) return;
     const loadSubjects = async () => {
-        const subs = await db.subjects.getBySemester(selectedSemId);
+        const subs = await getAllSubjectsApi();
         setSubjects(subs);
         if (subs.length > 0) setSelectedSubId(subs[0].id);
         else { setSelectedSubId(''); setChapters([]); }
@@ -44,7 +47,7 @@ export const AdminNotes: React.FC = () => {
   useEffect(() => {
     if (!selectedSubId) return;
     const loadChapters = async () => {
-        const chaps = await db.chapters.getBySubject(selectedSubId);
+        const chaps = await getChaptersApi(selectedSubId);
         setChapters(chaps);
         if (chaps.length > 0) setSelectedChapId(chaps[0].id);
         else { setSelectedChapId(''); setNotes([]); }
@@ -60,16 +63,37 @@ export const AdminNotes: React.FC = () => {
 
   const fetchNotes = async () => {
     setLoading(true);
-    const data = await db.notes.getByChapter(selectedChapId);
+    const data = await getNotesApi(selectedChapId);
     setNotes(data);
     setLoading(false);
   };
 
-  const handleCreate = async (e: React.FormEvent) => {
+ const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-  };
+    if (!selectedChapId) return alert("Select a chapter first");
 
+    setLoading(true);
+    try {
+        const payload = {
+            chapter_id: selectedChapId,
+            type: noteType,
+            title: noteContent   || 'Untitled Note',
+            // If TEXT, save to content. If others, save to url.
+            content: noteType === NoteType.TEXT ? noteContent : null,
+            url: noteType !== NoteType.TEXT ? noteContent : null,
+        };
+
+        await createNoteApi(payload);
+        
+        // Reset form
+        setNoteContent('');
+        fetchNotes();
+    } catch (error) {
+        alert("Failed to create note");
+    } finally {
+        setLoading(false);
+    }
+  };
   const handleDelete = async (id: string) => {
     if (window.confirm('Delete this note?')) {
       await db.notes.delete(id);
