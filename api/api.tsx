@@ -57,3 +57,36 @@ export const createSubjectApi = async (name:string, semester_id:string)  => {
     const res = await apiClient.post(`${baseUrl}/api/auth/subjects`, { name, semester_id });
     return res.data;
 };
+
+//chapters 
+export const getChaptersApi = async (subjectId: string) => {
+  const res = await apiClient.get(`/api/auth/chapters?subjectId=${subjectId}`);
+  return res.data.data;
+};
+
+export const createChapterApi = async (name: string, number: number, subject_id: string) => {
+  const res = await apiClient.post('/api/auth/chapters', { name, number, subject_id });
+  return res.data;
+};
+
+export const deleteChapterApi = async (id: string) => {
+  const res = await apiClient.delete(`/api/auth/chapters/${id}`);
+  return res.data;
+};
+
+
+//notes// ...existing code...
+export const getNotesApi = async (chapterId: string) => {
+    const res = await apiClient.get(`/api/auth/notes?chapterId=${chapterId}`);
+    return res.data.data;
+};
+
+export const createNoteApi = async (data: any) => {
+    const res = await apiClient.post('/api/auth/notes', data);
+    return res.data;
+};
+
+export const deleteNoteApi = async (id: string) => {
+    const res = await apiClient.delete(`/api/auth/notes/${id}`);
+    return res.data;
+};
