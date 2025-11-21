@@ -10,7 +10,7 @@ export const getAllSubs = async (req: Request, res: Response, next: NextFunction
         const {data, error} = await supabase.from('subjects').select('* , semesters(name)').order('id', { ascending: false });
 
         if(error){
-            throw new  AppError('Database Error', 500);
+            throw new  AppError(error.message, 500);
         }
        res.json({
         status: 'success',
@@ -28,7 +28,7 @@ export const createSub = async(req:Request, res:Response, next:NextFunction) => 
         const {name, semester_id} = req.body;
         const {data, error} = await supabase.from('subjects').insert([{name,  semester_id}]).select();
          if(error) {
-         throw new AppError("Database error", 500);
+         throw new AppError(error.message, 500);
         }
         res.status(201).json({status: "success", data: data});
     } catch (error) {

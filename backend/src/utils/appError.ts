@@ -1,6 +1,6 @@
 import { INVALID } from "zod/v3";
 
-const httpConfigCode = {
+export const httpConfigCode = {
     OK: 200,
     CREATED: 201,
     NO_CONTENT: 204,

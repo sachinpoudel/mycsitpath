@@ -8,7 +8,7 @@ export const getSem = async(res:Response, req:Request, next:NextFunction) => {
      const {data:semesters, error}  = await supabase.from('semesters').select('*').order('number', { ascending: true });
 
     if(error) {
-     throw new AppError("Database error", 500);
+     throw new AppError(error.message, 500);
     }
     res.json({status: "success", data: semesters});
    } catch (error) {
@@ -20,7 +20,7 @@ try {
     const {name, number} = req.body;
     const {data, error} = await supabase.from('semesters').insert([{name, number}]).select();
      if(error) {
-     throw new AppError("Database error", 500);
+     throw new AppError(error.message, 500);
     }
     res.status(201).json({status: "success", data: data});
 } catch (error) {
@@ -33,7 +33,7 @@ export const deleteSemester = async (req: Request, res: Response, next:NextFunct
      const { id } = req.params;
   const { error } = await supabase.from('semesters').delete().eq('id', id);
   if (error) {
-    throw new AppError("Database error", 500);  
+    throw new AppError(error.message, 500);  
   }
   res.json({ status: 'success', message: 'Deleted' });
  } catch (error) {
