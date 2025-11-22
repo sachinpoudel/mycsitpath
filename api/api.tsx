@@ -57,6 +57,10 @@ export const createSubjectApi = async (name:string, semester_id:string)  => {
     const res = await apiClient.post(`${baseUrl}/api/auth/subjects`, { name, semester_id });
     return res.data;
 };
+export const getSubjectsBySemesterApi = async (semesterId:string) => {
+    const res = await apiClient.post(`${baseUrl}/api/auth/subjects/by-semester`, { semesterId });
+    return res.data.data;
+};
 
 //chapters 
 export const getChaptersApi = async (subjectId: string) => {

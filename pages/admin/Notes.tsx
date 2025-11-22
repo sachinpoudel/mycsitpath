@@ -36,6 +36,10 @@ export const AdminNotes: React.FC = () => {
     if (!selectedSemId) return;
     const loadSubjects = async () => {
         const subs = await getAllSubjectsApi();
+        if(!subs) {
+ const error = new Error("Failed to fetch subjects");
+            throw error;
+        }
         setSubjects(subs);
         if (subs.length > 0) setSelectedSubId(subs[0].id);
         else { setSelectedSubId(''); setChapters([]); }

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { db } from '../../lib/db';
 import { Semester, Subject } from '../../types';
+import { db } from '../../lib/db';
 import { Button, Input, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Card, CardHeader, CardTitle, CardContent, Label } from '../../components/ui/shadcn';
 import { Trash2, Plus } from 'lucide-react';
-import { createSubjectApi } from '@/api/api';
+import { createSubjectApi, getSemestersApi, getSubjectsBySemesterApi } from '@/api/api';
 
 export const AdminSubjects: React.FC = () => {
   const [semesters, setSemesters] = useState<Semester[]>([]);
@@ -12,9 +12,13 @@ export const AdminSubjects: React.FC = () => {
   const [newSubjectName, setNewSubjectName] = useState('');
   const [loading, setLoading] = useState(false);
 
+
+
+  //sem fetched from hardcoded db supabse
   useEffect(() => {
     const loadData = async () => {
-        const sems = await db.semesters.getAll();
+        const sems = await getSemestersApi();
+        console.log(sems);
         setSemesters(sems);
         if (sems.length > 0) setSelectedSemId(sems[0].id);
     };
@@ -27,9 +31,11 @@ export const AdminSubjects: React.FC = () => {
     }
   }, [selectedSemId]);
 
+// fetch subjects from db 
+
   const fetchSubjects = async () => {
     setLoading(true);
-    const data = await db.subjects.getBySemester(selectedSemId);
+    const data = await getSubjectsBySemesterApi(selectedSemId)
     setSubjects(data);
     setLoading(false);
   };
