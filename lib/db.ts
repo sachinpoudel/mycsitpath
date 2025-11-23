@@ -211,7 +211,7 @@ export const db = {
       return newNote;
     },
     delete: async (id: string) => {
-      await delay(300);
+      await delay(300)
       const db = getDB();
       db.notes = db.notes.filter(n => n.id !== id);
       saveDB(db);

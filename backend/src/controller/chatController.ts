@@ -20,6 +20,20 @@ export const getChaptersBySubject = async (req: Request, res: Response, next: Ne
   }
 };
 
+export const getChapterById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+   const {id} = req.params;
+   const {data, error} = await supabase.from('chapters').select('*').eq('id', id).single();
+    if(error) {
+      throw new AppError(error.message, 500);
+    }
+    return res.json({status: "success", data: data});
+  } catch (error) {
+    next(error)
+  }
+}
+
+
 export const createChapter = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, number, subject_id } = req.body;

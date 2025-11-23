@@ -48,3 +48,18 @@ export const getSubBySemester = async(req:Request, res:Response, next:NextFuncti
         next(error)
     }
 }
+
+
+export const getSubById = async(req:Request, res:Response, next:NextFunction) => {
+    try {
+        const {id} = req.params;
+
+        const {data, error } = await supabase.from('subjects').select('*').eq('id', id).single();
+        if(error) {
+         throw new AppError(error.message, 500);
+        }
+        res.json({status: "success", data: data});
+    } catch (error) {
+        next(error)
+    }
+}

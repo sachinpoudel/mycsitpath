@@ -18,6 +18,22 @@ export const getNotes = async (req: Request, res: Response, next: NextFunction) 
   } catch (err) { next(err); }
 };
 
+
+export const getNoteByChapter = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const {chapter_id} = req.params;
+    const {data, error} = await supabase.from('notes').select('*').eq('chapter_id', chapter_id);
+    if(error) {
+      throw new AppError(error.message, 500);
+    }
+    return res.json({status: "success", data: data});
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+
 export const createNote = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { title, content, url, type, chapter_id } = req.body;

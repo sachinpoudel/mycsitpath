@@ -15,6 +15,22 @@ export const getSem = async(res:Response, req:Request, next:NextFunction) => {
   next(error)
 }
 }
+
+export const getSemById = async(req:Request, res:Response, next:NextFunction) => {
+  try {
+    const {id} = req.params;
+
+    const {data:semester, error } = await supabase.from('semesters').select('*').eq('id', id).single();
+    if(error) {
+     throw new AppError(error.message, 500);
+    }
+    res.json({status: "success", data: semester});
+  } catch (error) {
+    next(error)
+  }
+}
+
+
 export const createSem = async(req:Request, res:Response, next:NextFunction) => {
 try {
     const {name, number} = req.body;
