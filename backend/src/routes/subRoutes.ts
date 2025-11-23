@@ -1,6 +1,6 @@
 import { Router } from "express";
 import express from "express";
-import { createSub, getAllSubs, getSubBySemester } from "../controller/subController.js";
+import { createSub, getAllSubs, getSubById, getSubBySemester } from "../controller/subController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get('/subjects', authMiddleware, getAllSubs)
 router.post('/subjects', authMiddleware, createSub )
-router.post('/subjects/by-semester', authMiddleware, getSubBySemester )
+router.get('/subjects/by-semester/:id',  getSubBySemester ) // error xa
+router.get('/subjects/:id', authMiddleware, getSubById )
 
 export default router

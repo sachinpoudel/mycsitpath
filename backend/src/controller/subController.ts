@@ -38,8 +38,8 @@ export const createSub = async(req:Request, res:Response, next:NextFunction) => 
 
 export const getSubBySemester = async(req:Request, res:Response, next:NextFunction) => {
     try {
-        const {semesterId} = req.body;
-        const {data, error }= await supabase.from('subjects').select('*').eq('semester_id', semesterId);
+        const {id} = req.params;
+        const {data, error }= await supabase.from('subjects').select('*').eq('semester_id', id);
         if(error) {
             throw new AppError(error.message, 500);
         }

@@ -2,15 +2,14 @@ import  type { Request, Response, NextFunction } from 'express';
 import { supabase } from '../supabaseClient.js';
 import { AppError } from '../utils/appError.js';
 
-export const getNotes = async (req: Request, res: Response, next: NextFunction) => {
+export const getNotesByChapterId = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { chapterId } = req.query;
-    if (!chapterId) throw new AppError('Chapter ID required', 400);
+    const { id } = req.params;
 
     const { data, error } = await supabase
       .from('notes')
       .select('*')
-      .eq('chapter_id', chapterId)
+      .eq('chapter_id', id)
       .order('created_at', { ascending: false });
 
     if (error) throw new AppError(error.message, 400);
@@ -19,18 +18,18 @@ export const getNotes = async (req: Request, res: Response, next: NextFunction) 
 };
 
 
-export const getNoteByChapter = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const {chapter_id} = req.params;
-    const {data, error} = await supabase.from('notes').select('*').eq('chapter_id', chapter_id);
-    if(error) {
-      throw new AppError(error.message, 500);
-    }
-    return res.json({status: "success", data: data});
-  } catch (error) {
-    next(error)
-  }
-}
+// export const getNoteByChapter = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const {chapter_id} = req.params;
+//     const {data, error} = await supabase.from('notes').select('*').eq('chapter_id', chapter_id);
+//     if(error) {
+//       throw new AppError(error.message, 500);
+//     }
+//     return res.json({status: "success", data: data});
+//   } catch (error) {
+//     next(error)
+//   }
+// }
 
 
 

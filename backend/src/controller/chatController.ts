@@ -4,13 +4,12 @@ import { AppError } from '../utils/appError.js';
 
 export const getChaptersBySubject = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const subject_id = req.query.subjectId as string;
-    if (!subject_id) throw new AppError('subjectId required', 400);
+const {id} = req.params;
 
     const { data, error } = await supabase
       .from('chapters')
       .select('*')
-      .eq('subject_id', subject_id)
+      .eq('subject_id', id)
       .order('number', { ascending: true });
 
     if (error) throw new AppError(error.message, 400);
@@ -27,7 +26,7 @@ export const getChapterById = async (req: Request, res: Response, next: NextFunc
     if(error) {
       throw new AppError(error.message, 500);
     }
-    return res.json({status: "success", data: data});
+    return res.json({status: "success yes", data: data});
   } catch (error) {
     next(error)
   }

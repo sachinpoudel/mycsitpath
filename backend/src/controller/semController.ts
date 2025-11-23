@@ -3,7 +3,7 @@ import { supabase } from '../supabaseClient.js';
 import { AppError } from '../utils/appError.js';
 
 
-export const getSem = async(res:Response, req:Request, next:NextFunction) => {
+export const getSem = async( req:Request,res:Response, next:NextFunction) => {
    try {
      const {data:semesters, error}  = await supabase.from('semesters').select('*').order('number', { ascending: true });
 
