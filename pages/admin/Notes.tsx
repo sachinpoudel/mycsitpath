@@ -4,6 +4,7 @@ import { Semester, Subject, Chapter, Note, NoteType } from '../../types';
 import { Button, Input, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Card, CardHeader, CardTitle, CardContent, Label } from '../../components/ui/shadcn';
 import { Trash2, Plus, FileType, Image, Video, Link, FileText } from 'lucide-react';
 import { createNoteApi, getAllSubjectsApi, getChaptersApi, getNotesApi, getSemestersApi } from '@/api/api';
+import { uploadFile } from '@/file/storage';
 
 
 
@@ -20,6 +21,9 @@ export const AdminNotes: React.FC = () => {
   const [noteType, setNoteType] = useState<NoteType>(NoteType.TEXT);
   const [noteContent, setNoteContent] = useState(''); // For text or main URL
   const [loading, setLoading] = useState(false);
+
+    const [selectedFile, setSelectedFile] = useState<File | null>(null); // NEW: For File Uploads
+
 
   // Fetch Semesters
   useEffect(() => {
@@ -77,25 +81,67 @@ export const AdminNotes: React.FC = () => {
     setLoading(false);
   };
 
- const handleCreate = async (e: React.FormEvent) => {
+//  const handleCreate = async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     if (!selectedChapId) return alert("Select a chapter first");
+
+//     setLoading(true);
+//     try {
+//         const payload = {
+//             chapter_id: selectedChapId,
+//             type: noteType,
+//             title: noteContent   || 'Untitled Note',
+//             // If TEXT, save to content. If others, save to url.
+//             content: noteType === NoteType.TEXT ? noteContent : null,
+//             url: noteType !== NoteType.TEXT ? noteContent : null,
+//         };
+
+//         await createNoteApi(payload);
+        
+//         // Reset form
+//         setNoteContent('');
+//         fetchNotes();
+//     } catch (error) {
+//         alert("Failed to create note");
+//     } finally {
+//         setLoading(false);
+//     }
+//   };
+
+  const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedChapId) return alert("Select a chapter first");
 
     setLoading(true);
     try {
+        let finalContentOrUrl = noteContent;
+
+        if ((noteType === NoteType.PDF || noteType === NoteType.IMAGE) && selectedFile) {
+            const uploadedUrl = await uploadFile(selectedFile);
+            if (!uploadedUrl) {
+                setLoading(false);
+                console.log("File upload failed", uploadedUrl);
+                return; // Stop if upload failed
+            }
+            finalContentOrUrl = uploadedUrl;
+        }
+
         const payload = {
             chapter_id: selectedChapId,
             type: noteType,
-            title: noteContent   || 'Untitled Note',
-            // If TEXT, save to content. If others, save to url.
+            title: noteType === NoteType.TEXT ? 'Text Note' : (selectedFile?.name || 'Resource'),
+           
             content: noteType === NoteType.TEXT ? noteContent : null,
-            url: noteType !== NoteType.TEXT ? noteContent : null,
+            url: noteType !== NoteType.TEXT ? finalContentOrUrl : null,
         };
 
         await createNoteApi(payload);
         
-        // Reset form
         setNoteContent('');
+        setSelectedFile(null);
+        const fileInput = document.getElementById('file-upload') as HTMLInputElement;
+        if(fileInput) fileInput.value = '';
+        
         fetchNotes();
     } catch (error) {
         alert("Failed to create note");
@@ -103,6 +149,10 @@ export const AdminNotes: React.FC = () => {
         setLoading(false);
     }
   };
+
+
+
+
   const handleDelete = async (id: string) => {
     if (window.confirm('Delete this note?')) {
       await db.notes.delete(id);
@@ -215,7 +265,7 @@ export const AdminNotes: React.FC = () => {
 
                         <div>
                             <Label>{noteType === 'TEXT' ? 'Content (Markdown)' : 'Resource URL'}</Label>
-                            {noteType === 'TEXT' ? (
+                            {/* {noteType === 'TEXT' ? (
                                 <textarea 
                                     className="flex w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm min-h-[150px] mt-1"
                                     placeholder="# Note Title..."
@@ -233,7 +283,37 @@ export const AdminNotes: React.FC = () => {
                              {noteType !== 'TEXT' && <p className="text-xs text-slate-400 mt-1">Simulate upload by providing a URL.</p>}
                         </div>
 
-                        <Button type="submit" className="w-full">Add Note</Button>
+                        <Button type="submit" className="w-full">Add Note</Button> */}
+                        {noteType === NoteType.TEXT ? (
+                                <textarea 
+                                    className="flex w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm min-h-[150px] mt-1"
+                                    placeholder="# Note Title..."
+                                    value={noteContent}
+                                    onChange={(e) => setNoteContent(e.target.value)}
+                                />
+                            ) : noteType === NoteType.VIDEO ? (
+                                <Input 
+                                    className="mt-1"
+                                    placeholder="https://youtube.com/..."
+                                    value={noteContent}
+                                    onChange={(e) => setNoteContent(e.target.value)}
+                                />
+                            ) : (
+                                // FILE INPUT FOR PDF AND IMAGE
+                                <div className="mt-1 flex items-center gap-2">
+                                    <Input 
+                                        id="file-upload"
+                                        type="file"
+                                        accept={noteType === NoteType.PDF ? ".pdf" : "image/*"}
+                                        onChange={(e) => setSelectedFile(e.target.files ? e.target.files[0] : null)}
+                                    />
+                                </div>
+                            )}
+                        </div>
+
+                        <Button type="submit" className="w-full" disabled={loading}>
+                            {loading ? 'Uploading...' : 'Add Note'}
+                        </Button>
                     </form>
                 </CardContent>
             </Card>
