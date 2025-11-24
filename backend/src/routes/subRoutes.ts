@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get('/subjects', authMiddleware, getAllSubs)
 router.post('/subjects', authMiddleware, createSub )
-router.get('/subjects/by-semester/:id',  getSubBySemester ) // error xa
+router.get('/subjects/by-semester/:id',  getSubBySemester )
 router.get('/subjects/:id', authMiddleware, getSubById )
 
 export default router

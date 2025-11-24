@@ -4,7 +4,7 @@ import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
-router.get('/notes/:id', getNotesByChapterId); // ?chapterId=...
+router.get('/notes/by-chap/:id', getNotesByChapterId); // ?chapterId=...
 router.post('/notes', createNote);
 router.delete('/notes/:id', authMiddleware, deleteNote);
 // router.get('/notes/:chapter_id', authMiddleware, getNoteByChapter);

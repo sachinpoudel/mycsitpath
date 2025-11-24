@@ -51,10 +51,14 @@ export const AdminNotes: React.FC = () => {
   useEffect(() => {
     if (!selectedSubId) return;
     const loadChapters = async () => {
-        const chaps = await getChaptersApi(selectedSubId);
+      try {
+          const chaps = await getChaptersApi(selectedSubId);
         setChapters(chaps);
         if (chaps.length > 0) setSelectedChapId(chaps[0].id);
         else { setSelectedChapId(''); setNotes([]); }
+      } catch (error) {
+        console.error("Error fetching chapters:", error);
+      }
     };
     loadChapters();
   }, [selectedSubId]);
@@ -68,6 +72,7 @@ export const AdminNotes: React.FC = () => {
   const fetchNotes = async () => {
     setLoading(true);
     const data = await getNotesApi(selectedChapId);
+    console.log(data);
     setNotes(data);
     setLoading(false);
   };

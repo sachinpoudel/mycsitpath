@@ -3,6 +3,8 @@ import { db } from '../../lib/db';
 import { Semester, Subject, Chapter } from '../../types';
 import { Button, Input, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Card, CardHeader, CardTitle, CardContent, Label } from '../../components/ui/shadcn';
 import { Trash2, Plus } from 'lucide-react';
+import { getChaptersApi, getSemestersApi, getSubjectsBySemesterApi } from '@/api/api';
+import { getSubBySemester } from '@/backend/src/controller/subController';
 
 export const AdminChapters: React.FC = () => {
   const [semesters, setSemesters] = useState<Semester[]>([]);
@@ -17,7 +19,7 @@ export const AdminChapters: React.FC = () => {
   // Load Semesters initially
   useEffect(() => {
     const loadSemesters = async () => {
-        const sems = await db.semesters.getAll();
+        const sems = await getSemestersApi();
         setSemesters(sems);
         if (sems.length > 0) setSelectedSemId(sems[0].id);
     };
@@ -28,7 +30,9 @@ export const AdminChapters: React.FC = () => {
   useEffect(() => {
     if (!selectedSemId) return;
     const loadSubjects = async () => {
-        const subs = await db.subjects.getBySemester(selectedSemId);
+        const response = await getSubjectsBySemesterApi(selectedSemId);
+        // Fix: Access the .data property of the response object
+        const subs = response.data || []; 
         setSubjects(subs);
         if (subs.length > 0) {
             setSelectedSubId(subs[0].id);
@@ -48,7 +52,7 @@ export const AdminChapters: React.FC = () => {
 
   const fetchChapters = async () => {
     setLoading(true);
-    const data = await db.chapters.getBySubject(selectedSubId);
+    const data = await getChaptersApi(selectedSubId);
     setChapters(data);
     setLoading(false);
   };

@@ -47,7 +47,7 @@ export const adminLoginApi = async (username: string, password: string) => {
 
 // Semesters
 export const getSemestersApi = async () => (await apiClient.get(`${baseUrl}/api/auth/semesters`)).data.data;
-export const createSemesterApi = async ({name:string, number:number}) => (await apiClient.post('/api/auth/semesters', { name, number })).data;
+export const createSemesterApi = async ({name , number}: {name: string, number: number}) => (await apiClient.post('/api/auth/semesters', { name, number })).data;
 export const deleteSemesterApi = async (id: string) => (await apiClient.delete(`/api/auth/semesters/${id}`)).data;
 
 
@@ -59,13 +59,13 @@ export const createSubjectApi = async (name:string, semester_id:string)  => {
     return res.data;
 };
 export const getSubjectsBySemesterApi = async (semesterId:string) => {
-    const res = await apiClient.post(`${baseUrl}/api/auth/subjects/by-semester`, { semesterId });
-    return res.data.data;
+    const res = await apiClient.get(`${baseUrl}/api/auth/subjects/by-semester/${semesterId}`);
+    return res.data;
 };
 
 //chapters 
 export const getChaptersApi = async (subjectId: string) => {
-  const res = await apiClient.get(`/api/auth/chapters?subjectId=${subjectId}`);
+  const res = await apiClient.get(`/api/auth/chapters/by-sub/${subjectId}`);
   return res.data.data;
 };
 
@@ -82,7 +82,7 @@ export const deleteChapterApi = async (id: string) => {
 
 //notes// ...existing code...
 export const getNotesApi = async (chapterId: string) => {
-    const res = await apiClient.get(`/api/auth/notes?chapterId=${chapterId}`);
+    const res = await apiClient.get(`/api/auth/notes/by-chap/${chapterId}`);
     return res.data.data;
 };
 

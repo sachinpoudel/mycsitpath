@@ -4,7 +4,7 @@ import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
-router.get('/chapters/:id', getChaptersBySubject); 
+router.get('/chapters/by-sub/:id', getChaptersBySubject); 
 router.post('/chapters', authMiddleware, createChapter);
 router.delete('/chapters/:id', authMiddleware, deleteChapter);
 router.get('/chapters/by-id/:id', getChapterById);

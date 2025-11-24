@@ -35,9 +35,21 @@ export const AdminSubjects: React.FC = () => {
 
   const fetchSubjects = async () => {
     setLoading(true);
-    const data = await getSubjectsBySemesterApi(selectedSemId)
-    setSubjects(data);
-    setLoading(false);
+    try {
+      
+      const data = await getSubjectsBySemesterApi(selectedSemId)
+      
+      if(data){
+        setSubjects(data.data);
+
+      }else{
+        console.log(data.error);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      console.log("Error fetching subjects:", error); 
+    }
   };
 
   const handleCreate = async (e: React.FormEvent) => {
