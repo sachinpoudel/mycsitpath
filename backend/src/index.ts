@@ -10,7 +10,6 @@ const port = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 import bcrypt from 'bcrypt';
-// Replace 'your_password' with what you want to use
 const hash = await bcrypt.hash('sachin123', 10);
 console.log(hash);
 app.use("/api", rootRouter)

@@ -11,18 +11,19 @@ export const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("auth-storage")
-    ? JSON.parse(localStorage.getItem("auth-storage") as string).token
-    : null;
+  const storage = localStorage.getItem("auth-storage");
 
-  if (token) {
+  if (storage) {
     try {
-      const { state } = JSON.parse(token);
-      if (state?.token) {
-        config.headers.Authorization = `Bearer ${state.token}`;
+      const parsedStorage = JSON.parse(storage);
+      // Access token from the state object (Zustand persist pattern)
+      const token = parsedStorage.state?.token;
+
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
       }
-    } catch (error: any) {
-      throw error;
+    } catch (error) {
+      console.error("Error parsing auth token:", error);
     }
   }
   return config;
@@ -46,8 +47,8 @@ export const adminLoginApi = async (username: string, password: string) => {
 
 // Semesters
 export const getSemestersApi = async () => (await apiClient.get(`${baseUrl}/api/auth/semesters`)).data.data;
-export const createSemesterApi = async ({name:string, number:number}) => (await apiClient.post('/api/semesters', { name, number })).data;
-export const deleteSemesterApi = async (id: string) => (await apiClient.delete(`/api/semesters/${id}`)).data;
+export const createSemesterApi = async ({name:string, number:number}) => (await apiClient.post('/api/auth/semesters', { name, number })).data;
+export const deleteSemesterApi = async (id: string) => (await apiClient.delete(`/api/auth/semesters/${id}`)).data;
 
 
 //subjects
