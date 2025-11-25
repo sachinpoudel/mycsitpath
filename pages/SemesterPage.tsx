@@ -5,6 +5,7 @@ import { Semester } from '../types';
 import { SubjectCard } from '../components/SubjectCard';
 import { ArrowLeft } from 'lucide-react';
 import { SEO } from '../components/SEO';
+import { getSemestersApi, getSemestersByIdApi, getSubjectsBySemesterApi } from '@/api/api';
 
 export const SemesterPage: React.FC = () => {
   const { semId } = useParams<{ semId: string }>();
@@ -14,9 +15,9 @@ export const SemesterPage: React.FC = () => {
   useEffect(() => {
     if (semId) {
         const load = async () => {
-            const sem = await db.semesters.getById(semId);
+            const sem = await  getSemestersByIdApi(semId)
             if (sem) {
-                const subjects = await db.subjects.getBySemester(semId);
+                const subjects = await getSubjectsBySemesterApi(semId);
                 setSemester({ ...sem, subjects });
             }
             setLoading(false);

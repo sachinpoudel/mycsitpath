@@ -47,6 +47,7 @@ export const adminLoginApi = async (username: string, password: string) => {
 
 // Semesters
 export const getSemestersApi = async () => (await apiClient.get(`${baseUrl}/api/auth/semesters`)).data.data;
+export const getSemestersByIdApi = async (id:string) => (await apiClient.get(`${baseUrl}/api/auth/semesters/${id}`)).data.data;
 export const createSemesterApi = async ({name , number}: {name: string, number: number}) => (await apiClient.post('/api/auth/semesters', { name, number })).data;
 export const deleteSemesterApi = async (id: string) => (await apiClient.delete(`/api/auth/semesters/${id}`)).data;
 
@@ -80,7 +81,6 @@ export const deleteChapterApi = async (id: string) => {
 };
 
 
-//notes// ...existing code...
 export const getNotesApi = async (chapterId: string) => {
     const res = await apiClient.get(`/api/auth/notes/by-chap/${chapterId}`);
     return res.data.data;

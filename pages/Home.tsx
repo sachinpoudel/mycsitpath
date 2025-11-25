@@ -5,12 +5,25 @@ import { SemesterCard } from '../components/SemesterCard';
 import { db } from '../lib/db';
 import { Semester } from '../types';
 import { SEO } from '../components/SEO';
+import { getSemestersApi } from '@/api/api';
 
 export const Home: React.FC = () => {
   const [semesters, setSemesters] = useState<Semester[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    db.semesters.getAll().then(setSemesters);
+    const loadSemesters = async () => {
+      try {
+        const data = await getSemestersApi();
+        const sorted = (data || []).sort((a: Semester, b: Semester) => a.order - b.order);
+        setSemesters(sorted);
+      } catch (error) {
+        console.error("Failed to load semesters", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadSemesters();
   }, []);
 
   return (

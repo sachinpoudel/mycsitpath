@@ -6,9 +6,9 @@ import { authMiddleware } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 
-router.get('/semesters', authMiddleware, getSem)
+router.get('/semesters', getSem)
 router.post('/semesters', authMiddleware, createSem)
 router.delete('/semesters/:id', authMiddleware, deleteSemester);
-router.get('/semesters/:id', authMiddleware,  getSemById)
+router.get('/semesters/:id',  getSemById)
 
 export default router
