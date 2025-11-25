@@ -16,12 +16,14 @@ export const SemesterPage: React.FC = () => {
     if (semId) {
         const load = async () => {
             const sem = await  getSemestersByIdApi(semId)
+            console.log(sem); 
             if (sem) {
                 const subjects = await getSubjectsBySemesterApi(semId);
-                setSemester({ ...sem, subjects });
+                console.log(subjects);
+                setSemester({ ...sem, subjects: subjects.data });
             }
             setLoading(false);
-        };
+        };      
         load();
     }
   }, [semId]);

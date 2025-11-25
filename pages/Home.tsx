@@ -7,6 +7,25 @@ import { Semester } from '../types';
 import { SEO } from '../components/SEO';
 import { getSemestersApi } from '@/api/api';
 
+
+import { LayoutTextFlip } from "@/components/ui/layout-text-flip";
+import { motion } from "motion/react";
+
+export function LayoutTextFlipDemo() {
+  return (
+    <div>
+      <motion.div className="relative mx-4 my-4 flex flex-col items-center justify-center gap-4 text-center sm:mx-0 sm:mb-0 sm:flex-row">
+        <LayoutTextFlip
+       
+          words={["Aceternity UI", "Fight Club", "The Matrix", "The Jungle"]}
+        />
+      </motion.div>
+      
+    </div>
+  );
+}
+
+
 export const Home: React.FC = () => {
   const [semesters, setSemesters] = useState<Semester[]>([]);
   const [loading, setLoading] = useState(true);
@@ -44,12 +63,24 @@ export const Home: React.FC = () => {
             <span className="inline-block py-1 px-3 rounded-full bg-white/10 border border-white/20 text-indigo-300 text-sm font-medium mb-6 backdrop-blur-sm">
                For CSIT Students, By CSIT Students
             </span>
-            <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight mb-8 leading-tight">
+            {/* <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight mb-8 leading-tight">
               Master Your <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animate-gradient">
                 CSIT Journey
               </span>
-            </h1>
+            </h1> */}
+
+ <div className="text-6xl md:text-7xl font-black text-white tracking-tight mb-8 leading-tight flex flex-col items-center text-bold">
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                <LayoutTextFlip words={["Master", "Excel", "Level", "Leap"]} />
+                <span>Your</span>
+              </div>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animate-gradient ml-2">
+                CSIT Journey
+              </span>
+            </div>
+
+
             <p className="text-xl text-gray-300 mb-10 leading-relaxed max-w-2xl mx-auto">
               Access organized notes, chapters, PDFs, and curated video resources for every semester. <span className="text-white font-semibold">mycsitpath</span> is your ultimate academic companion.
             </p>

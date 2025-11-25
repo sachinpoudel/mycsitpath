@@ -6,9 +6,9 @@ import { authMiddleware } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 
-router.get('/subjects', authMiddleware, getAllSubs)
-router.post('/subjects', authMiddleware, createSub )
-router.get('/subjects/by-semester/:id',  getSubBySemester )
-router.get('/subjects/:id', authMiddleware, getSubById )
+router.get('/', getAllSubs)
+router.post('/', authMiddleware, createSub )
+router.get('/by-semester/:id',  getSubBySemester )
+router.get('/:id', getSubById )
 
 export default router

@@ -5,6 +5,7 @@ import { Chapter, Subject } from '../types';
 import { NotesViewer } from '../components/NotesViewer';
 import { ArrowLeft } from 'lucide-react';
 import { SEO } from '../components/SEO';
+import { getChaptersByIdApi, getSubjectsByIdApi } from '@/api/api';
 
 export const ChapterPage: React.FC = () => {
   const { chapterId } = useParams<{ chapterId: string }>();
@@ -17,10 +18,11 @@ export const ChapterPage: React.FC = () => {
   useEffect(() => {
     if (chapterId) {
         const load = async () => {
-            const chap = await db.chapters.getById(chapterId);
+            const chap = await getChaptersByIdApi(chapterId);
             if (chap) {
                 setChapter(chap);
-                const sub = await db.subjects.getById(chap.subjectId);
+                const realSubjectId = (chap as any).subjectId || chap.subject_id;
+                const sub = await getSubjectsByIdApi(realSubjectId);
                 setSubject(sub || null);
             }
             setLoading(false);

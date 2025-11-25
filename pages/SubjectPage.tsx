@@ -4,6 +4,7 @@ import { db } from '../lib/db';
 import { Semester, Subject, Chapter } from '../types';
 import { ChevronRight, FileText, Home } from 'lucide-react';
 import { SEO } from '../components/SEO';
+import { getChaptersBySubjectApi, getSemestersByIdApi, getSubjectsByIdApi } from '@/api/api';
 
 export const SubjectPage: React.FC = () => {
   const { semId, subjectId } = useParams<{ semId: string; subjectId: string }>();
@@ -15,9 +16,9 @@ export const SubjectPage: React.FC = () => {
   useEffect(() => {
     if (semId && subjectId) {
         const load = async () => {
-            const sem = await db.semesters.getById(semId);
-            const sub = await db.subjects.getById(subjectId);
-            const chaps = await db.chapters.getBySubject(subjectId);
+            const sem = await getSemestersByIdApi(semId);
+            const sub = await getSubjectsByIdApi(subjectId);
+            const chaps = await getChaptersBySubjectApi(subjectId);
             
             setSemester(sem || null);
             if (sub) {

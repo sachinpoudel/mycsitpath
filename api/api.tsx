@@ -46,52 +46,62 @@ export const adminLoginApi = async (username: string, password: string) => {
 
 
 // Semesters
-export const getSemestersApi = async () => (await apiClient.get(`${baseUrl}/api/auth/semesters`)).data.data;
-export const getSemestersByIdApi = async (id:string) => (await apiClient.get(`${baseUrl}/api/auth/semesters/${id}`)).data.data;
-export const createSemesterApi = async ({name , number}: {name: string, number: number}) => (await apiClient.post('/api/auth/semesters', { name, number })).data;
-export const deleteSemesterApi = async (id: string) => (await apiClient.delete(`/api/auth/semesters/${id}`)).data;
-
+export const getSemestersApi = async () => (await apiClient.get(`${baseUrl}/api/semesters`)).data.data;
+export const getSemestersByIdApi = async (id:string) => (await apiClient.get(`${baseUrl}/api/semesters/${id}`)).data.data;
+export const createSemesterApi = async ({name , number}: {name: string, number: number}) => (await apiClient.post('/api/semesters', { name, number })).data;
+export const deleteSemesterApi = async (id: string) => (await apiClient.delete(`/api/semesters/${id}`)).data;
 
 //subjects
  
-export const getAllSubjectsApi = async () => (await apiClient.get(`${baseUrl}/api/auth/subjects`)).data.data;
+export const getAllSubjectsApi = async () => (await apiClient.get(`${baseUrl}/api/subjects`)).data.data;
+export const getSubjectsByIdApi = async (id:string) => (await apiClient.get(`${baseUrl}/api/subjects/${id}`)).data.data;
 export const createSubjectApi = async (name:string, semester_id:string)  => {
-    const res = await apiClient.post(`${baseUrl}/api/auth/subjects`, { name, semester_id });
+    const res = await apiClient.post(`${baseUrl}/api/subjects`, { name, semester_id });
     return res.data;
 };
 export const getSubjectsBySemesterApi = async (semesterId:string) => {
-    const res = await apiClient.get(`${baseUrl}/api/auth/subjects/by-semester/${semesterId}`);
+    const res = await apiClient.get(`${baseUrl}/api/subjects/by-semester/${semesterId}`);
     return res.data;
 };
 
 //chapters 
 export const getChaptersApi = async (subjectId: string) => {
-  const res = await apiClient.get(`/api/auth/chapters/by-sub/${subjectId}`);
+  const res = await apiClient.get(`/api/chapters/by-sub/${subjectId}`);
+  return res.data.data;
+};
+
+export const getChaptersByIdApi = async (chapterId: string) => {
+  const res = await apiClient.get(`/api/chapters/by-id/${chapterId}`);
+  return res.data.data;
+};
+
+export const getChaptersBySubjectApi = async (subjectId: string) => {
+  const res = await apiClient.get(`/api/chapters/by-sub/${subjectId}`);
   return res.data.data;
 };
 
 export const createChapterApi = async (name: string, number: number, subject_id: string) => {
-  const res = await apiClient.post('/api/auth/chapters', { name, number, subject_id });
+  const res = await apiClient.post('/api/chapters', { name, number, subject_id });
   return res.data;
 };
 
 export const deleteChapterApi = async (id: string) => {
-  const res = await apiClient.delete(`/api/auth/chapters/${id}`);
+  const res = await apiClient.delete(`/api/chapters/${id}`);
   return res.data;
 };
 
-
+//notes apis
 export const getNotesApi = async (chapterId: string) => {
-    const res = await apiClient.get(`/api/auth/notes/by-chap/${chapterId}`);
+    const res = await apiClient.get(`/api/notes/by-chap/${chapterId}`);
     return res.data.data;
 };
 
 export const createNoteApi = async (data: any) => {
-    const res = await apiClient.post('/api/auth/notes', data);
+    const res = await apiClient.post('/api/notes', data);
     return res.data;
 };
 
 export const deleteNoteApi = async (id: string) => {
-    const res = await apiClient.delete(`/api/auth/notes/${id}`);
+    const res = await apiClient.delete(`/api/notes/${id}`);
     return res.data;
 };

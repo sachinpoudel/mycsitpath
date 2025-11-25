@@ -15,14 +15,13 @@ export enum ViewMode {
 
 export interface Note {
   id: string;
-  chapterId: string;
+  title: string;
   type: NoteType;
-  text?: string; // Rich text or content
-  imageUrls?: string[];
-  pdfUrl?: string;
-  videoUrls?: string[];
-  createdAt: string;
-  updatedAt: string;
+  // Add these two fields to match your database
+  content?: string; // For text notes
+  url?: string;     // For PDF, Image, Video
+  chapterId?: string;
+  createdAt?: string;
 }
 
 export interface Chapter {

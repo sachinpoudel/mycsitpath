@@ -7,9 +7,10 @@ import noteRoutes from "./noteRoutes.js";
 
 const rootRouter:Router = Router()
 rootRouter.use('/auth', authRoutes)
-rootRouter.use('/auth', semRoutes)
-rootRouter.use('/auth', subRoutes)
-rootRouter.use('/auth', chapRoutes)
-rootRouter.use('/auth', noteRoutes)
+
+rootRouter.use('/semesters', semRoutes);
+rootRouter.use('/subjects', subRoutes);
+rootRouter.use('/chapters', chapRoutes);
+rootRouter.use('/notes', noteRoutes);
 
 export default rootRouter;

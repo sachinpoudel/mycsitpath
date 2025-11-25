@@ -17,20 +17,38 @@ export const NotesViewer: React.FC<NotesViewerProps> = ({ chapter }) => {
   const [isAsking, setIsAsking] = useState(false);
 
   // Filter notes by type
-  const textNotes = chapter.notes?.filter(n => n.type === NoteType.TEXT) || [];
-  const imageNotes = chapter.notes?.filter(n => n.type === NoteType.IMAGE) || [];
-  const videoNotes = chapter.notes?.filter(n => n.type === NoteType.VIDEO) || [];
-  const pdfNotes = chapter.notes?.filter(n => n.type === NoteType.PDF) || [];
+  // Ensure we handle potential undefined/null values safely
+  const notes = chapter.notes || [];
+  const textNotes = notes.filter(n => n.type === NoteType.TEXT);
+  const imageNotes = notes.filter(n => n.type === NoteType.IMAGE);
+  const videoNotes = notes.filter(n => n.type === NoteType.VIDEO);
+  const pdfNotes = notes.filter(n => n.type === NoteType.PDF);
 
-  // Combine all text for AI context
-  const fullTextContent = textNotes.map(n => n.text).join('\n\n');
+  // Fix: Use 'content' field instead of 'text'
+  const fullTextContent = textNotes.map(n => n.content).join('\n\n');
+
+  // Helper to convert YouTube watch URLs to embed URLs
+  const getEmbedUrl = (url: string) => {
+    if (!url) return '';
+    if (url.includes('youtube.com/watch?v=')) {
+      return url.replace('watch?v=', 'embed/');
+    }
+    if (url.includes('youtu.be/')) {
+      return url.replace('youtu.be/', 'youtube.com/embed/');
+    }
+    return url;
+  };
 
   const handleSummarize = async () => {
     if (summary) return;
     if (!fullTextContent) return;
     setIsSummarizing(true);
-    const result = await generateSummary(fullTextContent);
-    setSummary(result);
+    try {
+        const result = await generateSummary(fullTextContent);
+        setSummary(result);
+    } catch (e) {
+        console.error(e);
+    }
     setIsSummarizing(false);
   };
 
@@ -38,17 +56,21 @@ export const NotesViewer: React.FC<NotesViewerProps> = ({ chapter }) => {
     e.preventDefault();
     if (!aiQuestion.trim() || !fullTextContent) return;
     setIsAsking(true);
-    const result = await askQuestion(fullTextContent, aiQuestion);
-    setAiAnswer(result);
+    try {
+        const result = await askQuestion(fullTextContent, aiQuestion);
+        setAiAnswer(result);
+    } catch (e) {
+        console.error(e);
+    }
     setIsAsking(false);
   };
 
   const tabs = [
-    { id: ViewMode.TEXT, label: 'Text Notes', icon: FileText },
-    { id: ViewMode.IMAGES, label: 'Images', icon: ImageIcon },
-    { id: ViewMode.PDF, label: 'PDFs', icon: FileIcon },
-    { id: ViewMode.VIDEO, label: 'Videos', icon: Video },
-    { id: ViewMode.AI_SUMMARY, label: 'AI Assist', icon: Sparkles },
+    { id: ViewMode.TEXT, label: 'Text Notes', icon: FileText, count: textNotes.length },
+    { id: ViewMode.IMAGES, label: 'Images', icon: ImageIcon, count: imageNotes.length },
+    { id: ViewMode.PDF, label: 'PDFs', icon: FileIcon, count: pdfNotes.length },
+    { id: ViewMode.VIDEO, label: 'Videos', icon: Video, count: videoNotes.length },
+    { id: ViewMode.AI_SUMMARY, label: 'AI Assist', icon: Sparkles, count: 0 },
   ];
 
   return (
@@ -73,18 +95,25 @@ export const NotesViewer: React.FC<NotesViewerProps> = ({ chapter }) => {
             >
               <tab.icon className="h-4 w-4" />
               {tab.label}
+              {tab.count > 0 && (
+                <span className="ml-1 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300 py-0.5 px-2 rounded-full text-xs">
+                    {tab.count}
+                </span>
+              )}
             </button>
           ))}
         </nav>
       </div>
 
       <div className="p-6 lg:p-8">
+        {/* TEXT TAB */}
         {activeTab === ViewMode.TEXT && (
           <div className="prose prose-indigo dark:prose-invert max-w-none">
             {textNotes.length > 0 ? (
                 textNotes.map(note => (
-                    <div key={note.id} className="mb-8">
-                         <ReactMarkdown>{note.text || ''}</ReactMarkdown>
+                    <div key={note.id} className="mb-12 border-b border-gray-100 dark:border-slate-700 pb-8 last:border-0">
+                         {note.title && <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-slate-100">{note.title}</h3>}
+                         <ReactMarkdown>{note.content || ''}</ReactMarkdown>
                     </div>
                 ))
             ) : (
@@ -96,12 +125,21 @@ export const NotesViewer: React.FC<NotesViewerProps> = ({ chapter }) => {
           </div>
         )}
 
+        {/* IMAGES TAB */}
         {activeTab === ViewMode.IMAGES && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {imageNotes.length > 0 ? (
-              imageNotes.flatMap(note => note.imageUrls || []).map((img, idx) => (
-                <div key={idx} className="relative group rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-slate-700">
-                  <img src={img} alt={`Note ${idx + 1}`} className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-500" />
+              imageNotes.map((note) => (
+                <div key={note.id} className="relative group rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-900">
+                  {/* Use note.url for the image source */}
+                  <img 
+                    src={note.url} 
+                    alt={note.title || 'Note Image'} 
+                    className="w-full h-64 object-contain bg-black/5 dark:bg-black/20" 
+                  />
+                  <div className="p-3 bg-white dark:bg-slate-800 border-t border-gray-100 dark:border-slate-700">
+                    <p className="font-medium text-sm text-gray-700 dark:text-slate-200">{note.title || 'Untitled Image'}</p>
+                  </div>
                 </div>
               ))
             ) : (
@@ -113,6 +151,7 @@ export const NotesViewer: React.FC<NotesViewerProps> = ({ chapter }) => {
           </div>
         )}
 
+        {/* PDF TAB */}
         {activeTab === ViewMode.PDF && (
           <div className="space-y-4">
             {pdfNotes.length > 0 ? (
@@ -122,10 +161,10 @@ export const NotesViewer: React.FC<NotesViewerProps> = ({ chapter }) => {
                     <div className="p-2 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-lg">
                         <FileIcon className="h-6 w-6" />
                     </div>
-                    <span className="font-medium text-gray-700 dark:text-slate-200">PDF Document {idx + 1}</span>
+                    <span className="font-medium text-gray-700 dark:text-slate-200">{note.title || `PDF Document ${idx + 1}`}</span>
                   </div>
                   <a 
-                    href={note.pdfUrl} 
+                    href={note.url} // Use note.url
                     target="_blank" 
                     rel="noreferrer"
                     className="px-4 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/50 transition-colors"
@@ -143,18 +182,24 @@ export const NotesViewer: React.FC<NotesViewerProps> = ({ chapter }) => {
           </div>
         )}
 
+        {/* VIDEO TAB */}
         {activeTab === ViewMode.VIDEO && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
              {videoNotes.length > 0 ? (
-              videoNotes.flatMap(note => note.videoUrls || []).map((video, idx) => (
-                <div key={idx} className="aspect-w-16 aspect-h-9 bg-gray-100 dark:bg-slate-700 rounded-xl overflow-hidden shadow-sm">
-                  <iframe 
-                    src={video} 
-                    title={`Video ${idx}`} 
-                    className="w-full h-full min-h-[300px]" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowFullScreen
-                  ></iframe>
+              videoNotes.map((note) => (
+                <div key={note.id} className="flex flex-col bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-slate-700">
+                  <div className="aspect-w-16 aspect-h-9 bg-gray-100 dark:bg-slate-700">
+                    <iframe 
+                      src={getEmbedUrl(note.url || '')} 
+                      title={note.title || 'Video'} 
+                      className="w-full h-full min-h-[250px]" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                  <div className="p-4">
+                    <h4 className="font-bold text-gray-900 dark:text-white">{note.title || 'Video Tutorial'}</h4>
+                  </div>
                 </div>
               ))
             ) : (
@@ -166,6 +211,7 @@ export const NotesViewer: React.FC<NotesViewerProps> = ({ chapter }) => {
           </div>
         )}
 
+        {/* AI TAB (Unchanged logic, just re-rendering) */}
         {activeTab === ViewMode.AI_SUMMARY && (
           <div className="space-y-8 max-w-3xl mx-auto">
              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 p-6 rounded-2xl border border-indigo-100 dark:border-indigo-800">
@@ -175,15 +221,12 @@ export const NotesViewer: React.FC<NotesViewerProps> = ({ chapter }) => {
                 </div>
                 {isSummarizing ? (
                      <div className="flex items-center space-x-2 text-indigo-500 dark:text-indigo-400 animate-pulse">
-                        <div className="w-2 h-2 bg-indigo-500 dark:bg-indigo-400 rounded-full"></div>
-                        <div className="w-2 h-2 bg-indigo-500 dark:bg-indigo-400 rounded-full animation-delay-200"></div>
-                        <div className="w-2 h-2 bg-indigo-500 dark:bg-indigo-400 rounded-full animation-delay-400"></div>
-                        <span>Generating summary...</span>
+                        <span>Generating summary from text notes...</span>
                      </div>
                 ) : (
                     <div className="prose prose-sm prose-indigo dark:prose-invert">
                         <ReactMarkdown>{summary}</ReactMarkdown>
-                        {!summary && <p className="text-gray-500 dark:text-slate-400 italic">Switch to this tab to generate a summary.</p>}
+                        {!summary && <p className="text-gray-500 dark:text-slate-400 italic">Switch to this tab to generate a summary of all text notes.</p>}
                     </div>
                 )}
              </div>
@@ -198,8 +241,8 @@ export const NotesViewer: React.FC<NotesViewerProps> = ({ chapter }) => {
                         type="text" 
                         value={aiQuestion}
                         onChange={(e) => setAiQuestion(e.target.value)}
-                        placeholder="e.g., Explain the CPU part..."
-                        className="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all bg-white dark:bg-slate-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500"
+                        placeholder="e.g., Explain the main concept..."
+                        className="flex-1 px-4 py-2 border border-gray-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all bg-white dark:bg-slate-900 text-gray-900 dark:text-white"
                     />
                     <button 
                         type="submit" 

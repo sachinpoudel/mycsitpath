@@ -5,7 +5,7 @@ import { AppError } from '../utils/appError.js';
 
 export const getSem = async( req:Request,res:Response, next:NextFunction) => {
    try {
-     const {data:semesters, error}  = await supabase.from('semesters').select('*').order('number', { ascending: true });
+     const {data:semesters, error}  = await supabase.from('semesters').select('*').order('orders', { ascending: true });
 
     if(error) {
      throw new AppError(error.message, 500);
@@ -15,6 +15,20 @@ export const getSem = async( req:Request,res:Response, next:NextFunction) => {
   next(error)
 }
 }
+
+export const getSemForClient = async( req:Request,res:Response, next:NextFunction) => {
+   try {
+     const {data:semesters, error}  = await supabase.from('semesters').select('*').order('orders', { ascending: true });
+
+    if(error) {
+     throw new AppError(error.message, 500);
+    }
+    res.json({status: "success", data: semesters});
+   } catch (error) {
+  next(error)
+}
+}
+
 
 export const getSemById = async(req:Request, res:Response, next:NextFunction) => {
   try {
