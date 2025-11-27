@@ -1,5 +1,5 @@
 import React from 'react'
-import ChromaGrid from '../components/ui/ChromeGrid';
+import { motion } from 'motion/react';
 
 const items = [
   {
@@ -37,6 +37,15 @@ const items = [
     borderColor: "#EC4899",
     gradient: "linear-gradient(180deg, #EC4899, #000)",
     url: "#"
+  },
+   {
+    image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+    title: "David Kim",
+    subtitle: "DevOps Engineer",
+    handle: "@david",
+    borderColor: "#F59E0B",
+    gradient: "linear-gradient(180deg, #F59E0B, #000)",
+    url: "#"
   }
 ];
 
@@ -53,15 +62,44 @@ const TeamPage = () => {
           </p>
         </div>
 
-        {/* Grid Container - Needs height for the absolute positioning of ChromaGrid */}
-        <div className="relative w-full h-[600px] md:h-[700px] rounded-3xl shadow-2xl dark:border-slate-700 overflow-hidden backdrop-blur-sm mt-3">
-          <ChromaGrid 
-            items={items}
-            radius={250} // Adjusted radius for better fit
-            damping={0.1} // Lower damping for smoother movement
-            fadeOut={0.8}
-            ease="back.out(1.7)"
-          />
+        {/* Responsive Grid Layout - Works on Mobile & Desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
+          {items.map((item, idx) => (
+            <motion.div 
+              key={idx}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              className="group relative bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-xl border border-gray-100 dark:border-slate-700 overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+            >
+               {/* Gradient Background Effect */}
+               <div 
+                 className="absolute top-0 left-0 w-full h-24 opacity-20 transition-opacity group-hover:opacity-30"
+                 style={{ background: item.gradient }}
+               />
+               
+               <div className="relative flex flex-col items-center text-center mt-8">
+                 <div className="relative">
+                   <div className="absolute -inset-1 rounded-full blur opacity-40 group-hover:opacity-60 transition-opacity" style={{ background: item.gradient }}></div>
+                   <img 
+                    src={item.image} 
+                    alt={item.title} 
+                    className="relative w-28 h-28 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-md" 
+                   />
+                 </div>
+                 
+                 <h3 className="mt-5 text-xl font-bold text-gray-900 dark:text-white">{item.title}</h3>
+                 <p className="text-sm font-medium text-primary-500 mb-3">{item.subtitle}</p>
+                 
+                 <div className="mt-2">
+                    <span className="px-4 py-1.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300 border border-gray-200 dark:border-slate-600">
+                      {item.handle}
+                    </span>
+                 </div>
+               </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </div>

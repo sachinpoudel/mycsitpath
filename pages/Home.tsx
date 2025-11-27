@@ -6,11 +6,14 @@ import { db } from '../lib/db';
 import { Semester } from '../types';
 import { SEO } from '../components/SEO';
 import { getSemestersApi } from '@/api/api';
+  import { Users, BookOpen, Trophy, Sparkles } from 'lucide-react';
+
 
 
 import { LayoutTextFlip } from "@/components/ui/layout-text-flip";
 import { motion } from "motion/react";
 import SplashCursor from '@/components/ui/SplashCursor';
+import MagicBento from '@/components/ui/BentoGrid';
 
 export function LayoutTextFlipDemo() {
   return (
@@ -132,6 +135,86 @@ export const Home: React.FC = () => {
             <SemesterCard key={sem.id} semester={sem} />
           ))}
         </div>
+      </div>
+  
+ {/* Why Choose Us Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-black text-gray-900 dark:text-white tracking-tight">Why Choose Us?</h2>
+          <p className="text-lg text-gray-500 dark:text-slate-400 mt-4 max-w-2xl mx-auto">
+            We provide the best tools and resources to help you succeed in your CSIT journey.
+          </p>
+        </div>
+
+        {/* Casting props to any because BentoProps doesn't declare 'items' */}
+     <MagicBento
+          {...({
+            textAutoHide: false,
+            enableStars: true,
+            enableSpotlight: true,
+            enableBorderGlow: true,
+            enableTilt: true,
+            enableMagnetism: true,
+            clickEffect: true,
+            spotlightRadius: 300,
+            particleCount: 20,
+            glowColor: "132, 0, 255",
+            items: [
+              // Row 1: Large Hero Card (2x2) + Two Stacked Cards (1x1)
+              {
+                id: 1,
+                title: "Comprehensive Resources",
+                description: "Access a vast library of curated notes, past questions, and syllabus breakdowns for all 8 semesters.",
+                icon: <BookOpen className="w-8 h-8 text-blue-500" />,
+                colSpan: 2, 
+                rowSpan: 2, // Tall & Wide (Hero item)
+              },
+              {
+                id: 2,
+                title: "Community Driven",
+                description: "Built by CSIT students, for CSIT students.",
+                icon: <Users className="w-8 h-8 text-purple-500" />,
+                colSpan: 1,
+                rowSpan: 1,
+              },
+              {
+                id: 3,
+                title: "Exam Focused",
+                description: "Get exam-ready with specialized prep modes.",
+                icon: <Trophy className="w-8 h-8 text-pink-500" />,
+                colSpan: 1,
+                rowSpan: 1,
+              },
+              // Row 1 (continued): Last column item
+              {
+                id: 4,
+                title: "AI Powered",
+                description: "Instant summaries and Q&A powered by Gemini.",
+                icon: <Sparkles className="w-8 h-8 text-yellow-500" />,
+                colSpan: 2, // Fills the gap next to the stacked ones if grid is 4 cols
+                rowSpan: 2, // Tall item on the right
+              },
+
+              // Row 2: Wide bottom bar
+              {
+                id: 5,
+                title: "Fast & Modern",
+                description: "Built with the latest tech stack for speed.",
+                icon: <Zap className="w-8 h-8 text-green-500" />,
+                colSpan: 1,
+                rowSpan: 1,
+              },
+              {
+                id: 6,
+                title: "Open Source",
+                description: "Contribute to the codebase on GitHub.",
+                icon: <Layers className="w-8 h-8 text-orange-500" />,
+                colSpan: 1,
+                rowSpan: 1,
+              },
+            ]
+          } as any)}
+        />
       </div>
     </div>
   );
