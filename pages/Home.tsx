@@ -10,6 +10,7 @@ import { getSemestersApi } from '@/api/api';
 
 import { LayoutTextFlip } from "@/components/ui/layout-text-flip";
 import { motion } from "motion/react";
+import SplashCursor from '@/components/ui/SplashCursor';
 
 export function LayoutTextFlipDemo() {
   return (
@@ -29,7 +30,7 @@ export function LayoutTextFlipDemo() {
 export const Home: React.FC = () => {
   const [semesters, setSemesters] = useState<Semester[]>([]);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     const loadSemesters = async () => {
       try {
@@ -50,9 +51,10 @@ export const Home: React.FC = () => {
       <SEO 
         title="Home" 
         description="The ultimate notes sharing platform for CSIT students. Access organized semester notes, chapters, PDFs, and videos."
-      />
+        />
       {/* Hero Section */}
       <div className="relative bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 dark:from-slate-950 dark:via-indigo-950 dark:to-slate-950 overflow-hidden min-h-[600px] flex items-center">
+        <SplashCursor/>
         {/* Animated Background Elements */}
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 dark:opacity-10"></div>
         <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-purple-600/30 rounded-full mix-blend-screen filter blur-[100px] animate-pulse"></div>

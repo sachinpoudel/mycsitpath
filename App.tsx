@@ -16,6 +16,7 @@ import { AdminSubjects } from './pages/admin/Subjects';
 import { AdminChapters } from './pages/admin/Chapters';
 import { AdminNotes } from './pages/admin/Notes';
 import { AdminPage } from './pages/AdminPage';
+import TeamPage from './pages/TeamPage';
 
 // Public Layout
 const PublicLayout = () => (
@@ -47,6 +48,7 @@ const App: React.FC = () => {
           <Route path="semester/:semId/subject/:subjectId" element={<SubjectPage />} />
           <Route path="chapter/:chapterId" element={<ChapterPage />} />
           <Route path="feedback" element={<FeedbackPage />} />
+          <Route path="team" element={<TeamPage />} />
         </Route>
 
         {/* Auth */}

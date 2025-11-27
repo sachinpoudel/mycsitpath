@@ -51,10 +51,10 @@ export const Navbar: React.FC = () => {
               Home
             </Link>
             <Link 
-              to="/semester/1" 
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/semester/1') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20' : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
+              to="/team" 
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/team') ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20' : 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-slate-800'}`}
             >
-              Browse Notes
+              Team
             </Link>
             <Link 
               to="/feedback" 
