@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Chapter, NoteType, ViewMode } from '../types';
 import { FileText, Image as ImageIcon, FileIcon, Video, MessageSquare, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
@@ -16,18 +16,21 @@ export const NotesViewer: React.FC<NotesViewerProps> = ({ chapter }) => {
   const [aiAnswer, setAiAnswer] = useState('');
   const [isAsking, setIsAsking] = useState(false);
 
-  // Filter notes by type
-  // Ensure we handle potential undefined/null values safely
+  // Safe access to notes
   const notes = chapter.notes || [];
   const textNotes = notes.filter(n => n.type === NoteType.TEXT);
   const imageNotes = notes.filter(n => n.type === NoteType.IMAGE);
   const videoNotes = notes.filter(n => n.type === NoteType.VIDEO);
   const pdfNotes = notes.filter(n => n.type === NoteType.PDF);
 
-  // Fix: Use 'content' field instead of 'text'
-  const fullTextContent = textNotes.map(n => n.content).join('\n\n');
+  const fullTextContent = useMemo(() => {
+    return textNotes.map(n => n.content).join('\n\n');
+  }, [textNotes]);
 
-  // Helper to convert YouTube watch URLs to embed URLs
+  const isYoutubeUrl = (url: string) => {
+    return url.includes('youtube.com') || url.includes('youtu.be');
+  };
+
   const getEmbedUrl = (url: string) => {
     if (!url) return '';
     if (url.includes('youtube.com/watch?v=')) {
@@ -131,11 +134,11 @@ export const NotesViewer: React.FC<NotesViewerProps> = ({ chapter }) => {
             {imageNotes.length > 0 ? (
               imageNotes.map((note) => (
                 <div key={note.id} className="relative group rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-900">
-                  {/* Use note.url for the image source */}
                   <img 
                     src={note.url} 
                     alt={note.title || 'Note Image'} 
                     className="w-full h-64 object-contain bg-black/5 dark:bg-black/20" 
+                    loading="lazy"
                   />
                   <div className="p-3 bg-white dark:bg-slate-800 border-t border-gray-100 dark:border-slate-700">
                     <p className="font-medium text-sm text-gray-700 dark:text-slate-200">{note.title || 'Untitled Image'}</p>
@@ -164,7 +167,7 @@ export const NotesViewer: React.FC<NotesViewerProps> = ({ chapter }) => {
                     <span className="font-medium text-gray-700 dark:text-slate-200">{note.title || `PDF Document ${idx + 1}`}</span>
                   </div>
                   <a 
-                    href={note.url} // Use note.url
+                    href={note.url} 
                     target="_blank" 
                     rel="noreferrer"
                     className="px-4 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/50 transition-colors"
@@ -182,20 +185,30 @@ export const NotesViewer: React.FC<NotesViewerProps> = ({ chapter }) => {
           </div>
         )}
 
-        {/* VIDEO TAB */}
+        {/* VIDEO TAB - IMPROVED */}
         {activeTab === ViewMode.VIDEO && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
              {videoNotes.length > 0 ? (
               videoNotes.map((note) => (
                 <div key={note.id} className="flex flex-col bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-slate-700">
                   <div className="aspect-w-16 aspect-h-9 bg-gray-100 dark:bg-slate-700">
-                    <iframe 
-                      src={getEmbedUrl(note.url || '')} 
-                      title={note.title || 'Video'} 
-                      className="w-full h-full min-h-[250px]" 
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                      allowFullScreen
-                    ></iframe>
+                    {isYoutubeUrl(note.url || '') ? (
+                      <iframe 
+                        src={getEmbedUrl(note.url || '')} 
+                        title={note.title || 'Video'} 
+                        className="w-full h-full min-h-[250px]" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowFullScreen
+                      ></iframe>
+                    ) : (
+                      <video 
+                        src={note.url} 
+                        controls 
+                        className="w-full h-full min-h-[250px] object-cover"
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    )}
                   </div>
                   <div className="p-4">
                     <h4 className="font-bold text-gray-900 dark:text-white">{note.title || 'Video Tutorial'}</h4>
@@ -211,7 +224,7 @@ export const NotesViewer: React.FC<NotesViewerProps> = ({ chapter }) => {
           </div>
         )}
 
-        {/* AI TAB (Unchanged logic, just re-rendering) */}
+        {/* AI TAB */}
         {activeTab === ViewMode.AI_SUMMARY && (
           <div className="space-y-8 max-w-3xl mx-auto">
              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 p-6 rounded-2xl border border-indigo-100 dark:border-indigo-800">

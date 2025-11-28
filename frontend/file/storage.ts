@@ -1,6 +1,6 @@
 import { supabase } from '../lib/supabase';
 
-export const uploadFile = async (file: File): Promise<string | null> => {
+export const uploadFile = async (file: File): Promise<string> => {
   try {
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
@@ -16,7 +16,7 @@ export const uploadFile = async (file: File): Promise<string | null> => {
 
     if (error) {
       console.error('Supabase Upload Error:', error);
-      return null;
+      throw new Error(error.message || 'Upload failed');
     }
 
     const { data: publicUrlData } = supabase.storage
@@ -24,8 +24,8 @@ export const uploadFile = async (file: File): Promise<string | null> => {
       .getPublicUrl(fileName);
 
     return publicUrlData.publicUrl;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Unexpected upload error:', error);
-    return null;
+    throw new Error(error.message || 'Unexpected upload error');
   }
 };
