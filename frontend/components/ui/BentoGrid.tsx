@@ -535,7 +535,7 @@ const MagicBento: React.FC<BentoProps> = ({
           
           @media (min-width: 600px) {
             .card-responsive {
-              grid-template-columns: repeat(1, 1fr);
+              grid-template-columns: repeat(2, 1fr);
             }
           }
           

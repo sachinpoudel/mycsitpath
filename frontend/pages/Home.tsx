@@ -7,6 +7,7 @@ import { Semester } from '../types';
 import { SEO } from '../components/SEO';
 import { getSemestersApi } from '@/api/api';
   import { Users, BookOpen, Trophy, Sparkles } from 'lucide-react';
+  import { HoverEffect } from '@/components/ui/card-hover-effect';
 
 
 
