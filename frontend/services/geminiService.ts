@@ -1,15 +1,24 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Fix: Use import.meta.env for Vite and ensure the key exists
+const apiKey = (import.meta as any).env.VITE_GEMINI_API_KEY;
+
+if (!apiKey) {
+  console.error("API Key is missing! Make sure VITE_GEMINI_API_KEY is set in your frontend .env file.");
+}
+
+const ai = new GoogleGenAI({ apiKey: apiKey });
 
 export const generateSummary = async (text: string): Promise<string> => {
   try {
-    const model = 'gemini-2.5-flash';
+    // Fix: Use a valid model name (gemini-1.5-flash is the current standard)
+    const model = 'gemini-1.5-flash'; 
     const prompt = `Please summarize the following study notes into concise bullet points suitable for a university student review:\n\n${text}`;
 
     const response = await ai.models.generateContent({
       model: model,
-      contents: prompt,
+      // Fix: Ensure contents follows the correct structure
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
     });
 
     return response.text || "No summary could be generated.";
@@ -21,12 +30,12 @@ export const generateSummary = async (text: string): Promise<string> => {
 
 export const askQuestion = async (context: string, question: string): Promise<string> => {
     try {
-      const model = 'gemini-2.5-flash';
+      const model = 'gemini-1.5-flash';
       const prompt = `Context: ${context}\n\nQuestion: ${question}\n\nAnswer the question based on the context provided. Keep it helpful and educational.`;
   
       const response = await ai.models.generateContent({
         model: model,
-        contents: prompt,
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
       });
   
       return response.text || "I couldn't find an answer.";

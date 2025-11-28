@@ -7,7 +7,11 @@ import rootRouter from './routes/rootRoutes.js';
 const app = express()
 const port = process.env.PORT || 3001;
 
-app.use(cors());
+app.use(cors({
+  "origin": "*"
+,  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  "preflightContinue": false,
+  "optionsSuccessStatus": 204}));
 app.use(express.json());
 import bcrypt from 'bcrypt';
 const hash = await bcrypt.hash('sachin123', 10);
