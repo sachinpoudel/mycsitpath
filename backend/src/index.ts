@@ -33,11 +33,11 @@ app.get('/', (req, res) => {
   });
 });
 app.use("/api", rootRouter)
-// app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// app.get('/{*path}', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../public', 'index.html'));
-// });
+app.get('/{*path}', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', 'index.html'));
+});
 
 // import bcrypt from 'bcrypt';
 // const hash = await bcrypt.hash('sachin123', 10);

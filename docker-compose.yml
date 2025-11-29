@@ -1,29 +1,19 @@
-version: "3.9"
-
 services:
   frontend:
     build: 
-     context: ./frontend
-     dockerfile: Dockerfile
-   
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "3002:80"
     depends_on:
       - backend
-    environment:
-      - VITE_API_URL=http://backend:3001
-      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
-      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
-      - VITE_GEMINI_API_KEY=${VITE_GEMINI_API_KEY}
+    # NO VITE_API_URL needed - using relative paths + Nginx proxy
 
   backend:
     build: 
-     context: ./backend
-     dockerfile: Dockerfile
-    
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
-      - "3001:3001"
-    environment:
-      - SUPABASE_API_URL=${SUPABASE_API_URL}
-      - SUPABASE_API_KEY=${SUPABASE_API_KEY}
-      - JWT_SECRET=${JWT_SECRET}
+      - "3004:3001"
+    env_file:
+      - ./backend/.env
