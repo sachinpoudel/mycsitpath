@@ -18,6 +18,20 @@ app.use(cors({
   "optionsSuccessStatus": 204}));
 
 app.use(express.json());
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
+// Root route (optional - just for testing)
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'MyCSITPath API Server',
+    endpoints: {
+      health: '/health',
+      api: '/api/*'
+    }
+  });
+});
 app.use("/api", rootRouter)
 // app.use(express.static(path.join(__dirname, 'public')));
 
