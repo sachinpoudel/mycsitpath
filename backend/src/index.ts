@@ -16,8 +16,7 @@ app.use(cors({
     "http://localhost:3000",
     "http://localhost:3002",
     "http://localhost:5173",
-    "https://mycsitpath.onrender.com",           // Your frontend URL
-    "https://mycsitpath-frontend.onrender.com",  // Alternative URL
+    "https://mycsitpath-f.onrender.com",  // ← Your frontend URL!
   ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   preflightContinue: false,
