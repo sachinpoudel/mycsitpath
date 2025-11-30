@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { db } from '../lib/db';
 import { Semester } from '../types';
 import { SubjectCard } from '../components/SubjectCard';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader } from 'lucide-react';
 import { SEO } from '../components/SEO';
 import { getSemestersApi, getSemestersByIdApi, getSubjectsBySemesterApi } from '@/api/api';
 
@@ -28,7 +28,7 @@ export const SemesterPage: React.FC = () => {
     }
   }, [semId]);
 
-  if (loading) return <div className="p-12 text-center dark:text-white">Loading...</div>;
+  if (loading) return <div className="p-12 text-center dark:text-white"> <div><Loader className="animate-spin h-20 w-20 text-gray-500 mx-auto" /></div></div>;
   if (!semester) return <div className="p-8 text-center dark:text-white">Semester not found</div>;
 
   return (

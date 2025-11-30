@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { db } from '../lib/db';
 import { Chapter, Subject } from '../types';
 import { NotesViewer } from '../components/NotesViewer';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader } from 'lucide-react';
 import { SEO } from '../components/SEO';
 import { getChaptersByIdApi, getSubjectsByIdApi } from '@/api/api';
 
@@ -31,7 +31,7 @@ export const ChapterPage: React.FC = () => {
     }
   }, [chapterId]);
 
-  if (loading) return <div className="p-12 text-center dark:text-white">Loading...</div>;
+  if (loading) return <div className="p-12 text-center dark:text-white"> <div><Loader className="animate-spin h-20 w-20 text-gray-500 mx-auto" /></div></div>;
   if (!chapter || !subject) {
     return (
         <div className="min-h-[60vh] flex flex-col items-center justify-center dark:text-white">

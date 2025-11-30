@@ -102,11 +102,11 @@ export const Navbar: React.FC = () => {
               Home
             </Link>
             <Link
-              to="/semester/1"
+              to="/team"
               onClick={() => setIsOpen(false)}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-slate-800"
             >
-              Browse Notes
+              Team
             </Link>
             <Link
               to="/feedback"

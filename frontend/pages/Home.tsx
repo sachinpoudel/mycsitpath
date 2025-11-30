@@ -6,7 +6,7 @@ import { db } from '../lib/db';
 import { Semester } from '../types';
 import { SEO } from '../components/SEO';
 import { getSemestersApi } from '@/api/api';
-  import { Users, BookOpen, Trophy, Sparkles } from 'lucide-react';
+  import { Users, BookOpen, Trophy, Sparkles, Loader } from 'lucide-react';
   import { HoverEffect } from '@/components/ui/card-hover-effect';
   import ScrollStack, {ScrollStackItem} from '@/components/ui/ScrollStack';
 
@@ -16,6 +16,7 @@ import { LayoutTextFlip } from "@/components/ui/layout-text-flip";
 import { motion } from "motion/react";
 import SplashCursor from '@/components/ui/SplashCursor';
 import MagicBento from '@/components/ui/BentoGrid';
+import { div } from 'motion/react-client';
 
 export function LayoutTextFlipDemo() {
   return (
@@ -94,7 +95,7 @@ export const Home: React.FC = () => {
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               {semesters.length > 0 && (
                   <Link
-                    to={`/semester/${semesters[0].id}`}
+                    to={`/semester`}
                     className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-full text-white bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-500 hover:to-purple-500 transition-all shadow-lg hover:shadow-primary-500/25 transform hover:-translate-y-1"
                   >
                     Browse Notes <ArrowRight className="ml-2 h-5 w-5" />
@@ -132,11 +133,11 @@ export const Home: React.FC = () => {
              <p className="text-gray-500 dark:text-slate-400 mt-2">Select your current semester to view subjects.</p>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+       { loading ? <div className='flex justify-center'> <Loader className="animate-spin h-20 w-20 text-gray-500 mx-auto" /> </div> : <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {semesters.map((sem) => (
             <SemesterCard key={sem.id} semester={sem} />
           ))}
-        </div>
+        </div> }
       </div>
   
  {/* Why Choose Us Section */}

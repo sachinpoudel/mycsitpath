@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { db } from '../lib/db';
 import { Semester, Subject, Chapter } from '../types';
-import { ChevronRight, FileText, Home } from 'lucide-react';
+import { ChevronRight, FileText, Home, Loader } from 'lucide-react';
 import { SEO } from '../components/SEO';
 import { getChaptersBySubjectApi, getSemestersByIdApi, getSubjectsByIdApi } from '@/api/api';
 
@@ -30,7 +30,7 @@ export const SubjectPage: React.FC = () => {
     }
   }, [semId, subjectId]);
 
-  if (loading) return <div className="p-12 text-center dark:text-white">Loading...</div>;
+  if (loading) return <div className="p-12 text-center dark:text-white"> <div><Loader className="animate-spin h-20 w-20 text-gray-500 mx-auto" /></div></div>;
   if (!semester || !subject) return <div className="p-8 text-center dark:text-white">Subject not found</div>;
 
   return (

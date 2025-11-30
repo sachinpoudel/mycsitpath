@@ -22,7 +22,7 @@ export const SemesterCard: React.FC<SemesterCardProps> = ({ semester }) => {
             {semester.name}
           </h3>
           <p className="text-sm text-gray-500 dark:text-slate-400">
-            {semester.subjects ? semester.subjects.length : 0} Subjects • CSIT
+            {semester.subjects ? semester.subjects.length : 5} Subjects • CSIT
           </p>
         </div>
         <div className="h-1 w-full bg-gradient-to-r from-primary-400 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity" />
