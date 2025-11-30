@@ -8,6 +8,7 @@ import { SEO } from '../components/SEO';
 import { getSemestersApi } from '@/api/api';
   import { Users, BookOpen, Trophy, Sparkles } from 'lucide-react';
   import { HoverEffect } from '@/components/ui/card-hover-effect';
+  import ScrollStack, {ScrollStackItem} from '@/components/ui/ScrollStack';
 
 
 
@@ -148,7 +149,7 @@ export const Home: React.FC = () => {
         </div>
 
         {/* Casting props to any because BentoProps doesn't declare 'items' */}
-     <MagicBento
+     {/* <MagicBento
           {...({
             textAutoHide: false,
             enableStars: true,
@@ -215,7 +216,162 @@ export const Home: React.FC = () => {
               },
             ]
           } as any)}
-        />
+        /> */}
+
+       
+<ScrollStack 
+    useWindowScroll={true}
+    itemDistance={60}
+    itemScale={0.015}
+    baseScale={0.95}
+    itemStackDistance={20}
+  >
+    {/* Card 1 */}
+    <ScrollStackItem 
+      itemClassName="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700"
+      style={{ minHeight: '450px' }}
+    >
+      <div className="flex flex-col md:flex-row items-center justify-between h-full gap-8 md:gap-12">
+        <div className="flex-1">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-4 bg-blue-100 dark:bg-blue-900/30 rounded-2xl">
+              <BookOpen className="w-10 h-10 md:w-12 md:h-12 text-blue-600 dark:text-blue-400" />
+            </div>
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+              Comprehensive Resources
+            </h3>
+          </div>
+          <p className="text-lg md:text-xl text-gray-600 dark:text-slate-300 leading-relaxed">
+            Access a vast library of curated notes, past questions, and syllabus 
+            breakdowns for all 8 semesters. Everything you need in one place.
+          </p>
+          <ul className="mt-6 space-y-3">
+            {['Notes for all subjects', 'Past exam questions', 'Syllabus breakdowns'].map((item, i) => (
+              <li key={i} className="flex items-center gap-3 text-gray-700 dark:text-slate-300">
+                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="flex-1 flex justify-center">
+          <div className="w-48 h-48 md:w-64 md:h-64 bg-blue-100 dark:bg-blue-900/20 rounded-3xl flex items-center justify-center">
+            <BookOpen className="w-24 h-24 md:w-32 md:h-32 text-blue-500 dark:text-blue-400" />
+          </div>
+        </div>
+      </div>
+    </ScrollStackItem>
+
+    {/* Card 2 */}
+    <ScrollStackItem 
+      itemClassName="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700"
+      style={{ minHeight: '450px' }}
+    >
+      <div className="flex flex-col md:flex-row-reverse items-center justify-between h-full gap-8 md:gap-12">
+        <div className="flex-1">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-4 bg-purple-100 dark:bg-purple-900/30 rounded-2xl">
+              <Users className="w-10 h-10 md:w-12 md:h-12 text-purple-600 dark:text-purple-400" />
+            </div>
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+              Community Driven
+            </h3>
+          </div>
+          <p className="text-lg md:text-xl text-gray-600 dark:text-slate-300 leading-relaxed">
+            Built by CSIT students, for CSIT students. Join thousands of peers 
+            sharing knowledge and helping each other succeed.
+          </p>
+          <ul className="mt-6 space-y-3">
+            {['Student contributions', 'Peer reviews', 'Active discussions'].map((item, i) => (
+              <li key={i} className="flex items-center gap-3 text-gray-700 dark:text-slate-300">
+                <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="flex-1 flex justify-center">
+          <div className="w-48 h-48 md:w-64 md:h-64 bg-purple-100 dark:bg-purple-900/20 rounded-3xl flex items-center justify-center">
+            <Users className="w-24 h-24 md:w-32 md:h-32 text-purple-500 dark:text-purple-400" />
+          </div>
+        </div>
+      </div>
+    </ScrollStackItem>
+
+    {/* Card 3 */}
+    <ScrollStackItem 
+      itemClassName="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700"
+      style={{ minHeight: '450px' }}
+    >
+      <div className="flex flex-col md:flex-row items-center justify-between h-full gap-8 md:gap-12">
+        <div className="flex-1">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-4 bg-amber-100 dark:bg-amber-900/30 rounded-2xl">
+              <Sparkles className="w-10 h-10 md:w-12 md:h-12 text-amber-600 dark:text-amber-400" />
+            </div>
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+              AI Powered
+            </h3>
+          </div>
+          <p className="text-lg md:text-xl text-gray-600 dark:text-slate-300 leading-relaxed">
+            Get instant summaries and answers powered by Gemini AI. 
+            Study smarter, not harder with intelligent assistance.
+          </p>
+          <ul className="mt-6 space-y-3">
+            {['Instant summaries', 'Q&A assistance', 'Smart recommendations'].map((item, i) => (
+              <li key={i} className="flex items-center gap-3 text-gray-700 dark:text-slate-300">
+                <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="flex-1 flex justify-center">
+          <div className="w-48 h-48 md:w-64 md:h-64 bg-amber-100 dark:bg-amber-900/20 rounded-3xl flex items-center justify-center">
+            <Sparkles className="w-24 h-24 md:w-32 md:h-32 text-amber-500 dark:text-amber-400" />
+          </div>
+        </div>
+      </div>
+    </ScrollStackItem>
+
+    {/* Card 4 */}
+    <ScrollStackItem 
+      itemClassName="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700"
+      style={{ minHeight: '450px' }}
+    >
+      <div className="flex flex-col md:flex-row-reverse items-center justify-between h-full gap-8 md:gap-12">
+        <div className="flex-1">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-4 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl">
+              <Trophy className="w-10 h-10 md:w-12 md:h-12 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+              Exam Focused
+            </h3>
+          </div>
+          <p className="text-lg md:text-xl text-gray-600 dark:text-slate-300 leading-relaxed">
+            Get exam-ready with specialized preparation modes, past papers, 
+            and targeted revision materials for every subject.
+          </p>
+          <ul className="mt-6 space-y-3">
+            {['Past papers', 'Revision materials', 'Exam strategies'].map((item, i) => (
+              <li key={i} className="flex items-center gap-3 text-gray-700 dark:text-slate-300">
+                <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="flex-1 flex justify-center">
+          <div className="w-48 h-48 md:w-64 md:h-64 bg-emerald-100 dark:bg-emerald-900/20 rounded-3xl flex items-center justify-center">
+            <Trophy className="w-24 h-24 md:w-32 md:h-32 text-emerald-500 dark:text-emerald-400" />
+          </div>
+        </div>
+      </div>
+    </ScrollStackItem>
+  </ScrollStack>
+
+
       </div>
     </div>
   );
