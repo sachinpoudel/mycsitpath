@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Use empty string for Docker (Nginx will proxy /api/* to backend)
 // Use localhost:3001 only for local development without Docker
-const baseUrl =  "";
+const baseUrl = (import.meta as any).env?.VITE_API_URL || "";
 
 export const apiClient = axios.create({
   baseURL: baseUrl,

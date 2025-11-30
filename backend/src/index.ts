@@ -12,10 +12,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(cors({
-  "origin": "*"
-,  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-  "preflightContinue": false,
-  "optionsSuccessStatus": 204}));
+   origin: [
+    "http://localhost:3000",
+    "http://localhost:3002",
+    "http://localhost:5173",
+    "https://mycsitpath.onrender.com",           // Your frontend URL
+    "https://mycsitpath-frontend.onrender.com",  // Alternative URL
+  ],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  preflightContinue: false,
+  optionsSuccessStatus: 204}));
 
 app.use(express.json());
 app.get('/health', (req, res) => {
