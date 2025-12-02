@@ -5,7 +5,7 @@ import { AppError } from '../utils/appError.js';
 
 export const getSem = async( req:Request,res:Response, next:NextFunction) => {
    try {
-     const {data:semesters, error}  = await supabase.from('semesters').select('*').order('orders', { ascending: true });
+res.setHeader('Cache-Control', 'public, max-age=60');     const {data:semesters, error}  = await supabase.from('semesters').select('*').order('orders', { ascending: true });
 
     if(error) {
      throw new AppError(error.message, 500);

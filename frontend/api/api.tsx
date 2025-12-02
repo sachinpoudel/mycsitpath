@@ -34,9 +34,22 @@ export const adminLoginApi = async (username: string, password: string) => {
   return res.data;
 };
 
-// Semesters - use RELATIVE paths only
-export const getSemestersApi = async () => 
-  (await apiClient.get("/api/semesters")).data.data;
+export const getSemestersApi = async () => {
+  try {
+   const res =  await apiClient.get("/api/semesters");
+
+   if(res.status !== 200) {
+    throw new Error('Failed to fetch semesters');
+   }
+    return res.data.data;
+
+
+
+  } catch (error) {
+    console.log('Error fetching semesters:', error);
+  }
+}
+  
 
 export const getSemestersByIdApi = async (id: string) => 
   (await apiClient.get(`/api/semesters/${id}`)).data.data;
@@ -47,7 +60,8 @@ export const createSemesterApi = async ({ name, number }: { name: string; number
 export const deleteSemesterApi = async (id: string) => 
   (await apiClient.delete(`/api/semesters/${id}`)).data;
 
-// Subjects - use RELATIVE paths only
+// subjects
+
 export const getAllSubjectsApi = async () => 
   (await apiClient.get("/api/subjects")).data.data;
 

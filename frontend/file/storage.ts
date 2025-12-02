@@ -29,3 +29,13 @@ export const uploadFile = async (file: File): Promise<string> => {
     throw new Error(error.message || 'Unexpected upload error');
   }
 };
+
+const { data: files } = await supabase.storage
+  .from('course-materials')
+  .list("pdfs");
+
+export const pdfUrls = files.map(file => 
+  supabase.storage
+    .from('course-materials')
+    .getPublicUrl(`pdfs/${file.name}`).data.publicUrl
+);

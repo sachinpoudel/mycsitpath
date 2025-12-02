@@ -1,11 +1,12 @@
 import express from 'express';
 import path from 'path';
-
+import compression from 'compression';
 import cors from 'cors';
 import rootRouter from './routes/rootRoutes.js';
 import { fileURLToPath } from 'url';
 
 const app = express()
+app.use(compression())
 const port = process.env.PORT || 3001;
 
 const __filename = fileURLToPath(import.meta.url);
